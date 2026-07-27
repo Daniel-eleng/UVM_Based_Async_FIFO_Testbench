@@ -35,7 +35,6 @@ class FIFO_wr_driver extends uvm_driver #(FIFO_wr_item);
 
         FIFO_wr_item wr_itm;
 
-        @(inf.drv_cb_wr);
         reset();
 
         forever begin

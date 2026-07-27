@@ -29,7 +29,7 @@ interface FIFO_inf #(parameter DATA_WIDTH = 16, parameter DEPTH = 16)
 
     clocking mon_cb_rd @(posedge rd_clk);
         default input #1step output #1;
-        input data_in, data_out, empty, rd_rst_n, rd_en;
+        input data_out, empty, rd_rst_n, rd_en;
     endclocking
 
     modport DRIVER_WR  (clocking drv_cb_wr);

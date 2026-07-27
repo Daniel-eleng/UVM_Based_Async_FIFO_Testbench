@@ -1,0 +1,33 @@
+# Vivado temporary files and folders
+*.cache/
+*.runs/
+*.sim/
+*.hw/
+*.ip_user_files/
+*.dir
+*.pb
+*.vscode
+
+# Log and journal files
+*.jou
+*.log
+*.str
+
+# Project files (optional to ignore if you want others to create their own)
+*.xpr
+
+# OS generated files
+.DS_Store
+Thumbs.db
+*.tmp
+
+# Exclusions - Keep these files!
+!*.v
+!*.sv
+!*.xdc
+!*.md
+!*.png
+!*.jpg
+!*.svg
+!*.pdf
+!*.tcl

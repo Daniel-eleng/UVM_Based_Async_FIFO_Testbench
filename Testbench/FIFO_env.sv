@@ -25,15 +25,15 @@ class FIFO_env extends uvm_env;
 
         super.build_phase(phase);
 
-        scrb = FIFO_scoreboard :: type_id :: create("scrb",this);
+        scrb = FIFO_scoreboard#(16,16) :: type_id :: create("scrb",this);
 
         wr_agn = FIFO_wr_agent :: type_id :: create("wr_agn",this);
 
         rd_agn = FIFO_rd_agent :: type_id :: create("rd_agn",this);
 
-        wr_cov = FIFO_wr_coverage :: type_id :: create("wr_cov",this);
+        wr_cov = FIFO_wr_coverage#(16) :: type_id :: create("wr_cov",this);
 
-        rd_cov = FIFO_rd_coverage :: type_id :: create("rd_cov",this);
+        rd_cov = FIFO_rd_coverage#(16) :: type_id :: create("rd_cov",this);
       
     endfunction
 

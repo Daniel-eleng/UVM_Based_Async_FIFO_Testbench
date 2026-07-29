@@ -14,4 +14,12 @@ class FIFO_wr_item #(parameter DATA_WIDTH = 16) extends uvm_sequence_item;
         super.new(name);
     endfunction
 
+    constraint data_in_dist {
+    data_in dist {
+        0                        := 20,
+        (1<<DATA_WIDTH)-1        := 20,
+        [1 : (1<<DATA_WIDTH)-2]  :/ 60
+    };
+}
+
 endclass

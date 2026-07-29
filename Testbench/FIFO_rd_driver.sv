@@ -47,7 +47,7 @@ class FIFO_rd_driver extends uvm_driver #(FIFO_rd_item);
 
             seq_item_port.item_done();
 
-            `uvm_info(get_type_name(),$sformatf("rd_en = %0d",inf.drv_cb_rd.rd_en),UVM_HIGH)
+            `uvm_info(get_type_name(),$sformatf("rd_en = %0d",rd_itm.rd_en),UVM_HIGH)
 
             end
       

@@ -17,14 +17,14 @@ class FIFO_rd_coverage #(parameter DATA_WIDTH = 16) extends uvm_subscriber#(FIFO
     covergroup FIFO_rd_cg;
 
         rd_en_cp : coverpoint rd_itm.rd_en;
-        empty_cp : coverpoint rd_itm.empty;
+        empty_cp : coverpoint rd_itm.is_empty;
         FIFO_cross : cross rd_en_cp , empty_cp;
 
     endgroup
 
-    function void write(FIFO_rd_item rd_item);
+    function void write(FIFO_rd_item t);
 
-        rd_itm = rd_item;
+        rd_itm = t;
         FIFO_rd_cg.sample();
       
     endfunction

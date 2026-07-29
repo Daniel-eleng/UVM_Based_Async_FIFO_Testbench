@@ -19,7 +19,6 @@ class FIFO_wr_coverage #(parameter DATA_WIDTH = 16) extends uvm_subscriber#(FIFO
         data_in_cp : coverpoint wr_itm.data_in{
             bins zero = {0};
             bins max = {(1<<DATA_WIDTH) - 1};
-            ignore_bins rest = default;
         }
 
         wr_en_cp : coverpoint wr_itm.wr_en;
@@ -28,9 +27,9 @@ class FIFO_wr_coverage #(parameter DATA_WIDTH = 16) extends uvm_subscriber#(FIFO
         FIFO_cross : cross wr_en_cp , full_cp;
     endgroup
 
-    function void write(FIFO_wr_item wr_item);
+    function void write(FIFO_wr_item t);
 
-        wr_itm = wr_item;
+        wr_itm = t;
         FIFO_wr_cg.sample();
       
     endfunction

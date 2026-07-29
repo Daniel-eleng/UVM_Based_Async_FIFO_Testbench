@@ -47,7 +47,7 @@ class FIFO_wr_driver extends uvm_driver #(FIFO_wr_item);
 
             seq_item_port.item_done();
 
-            `uvm_info(get_type_name(),$sformatf("wr_en = %0d | data_in = %0d",inf.drv_cb_wr.wr_en,inf.drv_cb_wr.data_in),UVM_HIGH)
+            `uvm_info(get_type_name(),$sformatf("wr_en = %0d | data_in = %0d",wr_itm.wr_en,wr_itm.data_in),UVM_HIGH)
 
             end
       

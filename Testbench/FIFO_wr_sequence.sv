@@ -21,7 +21,7 @@ class FIFO_wr_seq extends uvm_sequence #(FIFO_wr_item #(16));
 
             start_item(wr_itm);
 
-            assert(wr_itm.randomize() with {wr_en == 1});
+            assert(wr_itm.randomize() with {wr_en == 1;});
 
             finish_item(wr_itm);
 

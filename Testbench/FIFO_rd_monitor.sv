@@ -41,9 +41,9 @@ class FIFO_rd_monitor extends uvm_monitor;
 
                 rd_itm.rd_en = inf.mon_cb_rd.rd_en;
                 rd_itm.data_out = inf.mon_cb_rd.data_out;
-                rd_itm.empty = inf.mon_cb_rd.empty;
+                rd_itm.is_empty = inf.mon_cb_rd.empty;
 
-                `uvm_info(get_type_name(),$sformatf("rd_en = %0d | data_out = %0d | empty = %0d",rd_itm.rd_en,rd_itm.data_out,rd_itm.empty),UVM_HIGH)
+                `uvm_info(get_type_name(),$sformatf("rd_en = %0d | data_out = %0d | is_empty = %0d",rd_itm.rd_en,rd_itm.data_out,rd_itm.is_empty),UVM_HIGH)
 
                 mon_rd.write(rd_itm);
 

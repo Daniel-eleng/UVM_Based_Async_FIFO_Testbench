@@ -15,6 +15,8 @@ class FIFO_env extends uvm_env;
 
     FIFO_rd_coverage #(16) rd_cov;
 
+    FIFO_virtual_sequencer virt_seqr;
+
     function new(string name = "FIFO_env", uvm_component parent);
  
         super.new(name,parent);
@@ -34,6 +36,8 @@ class FIFO_env extends uvm_env;
         wr_cov = FIFO_wr_coverage#(16) :: type_id :: create("wr_cov",this);
 
         rd_cov = FIFO_rd_coverage#(16) :: type_id :: create("rd_cov",this);
+
+        virt_seqr = FIFO_virtual_sequencer :: type_id :: create("virt_seqr",this);
       
     endfunction
 
@@ -48,6 +52,10 @@ class FIFO_env extends uvm_env;
         rd_agn.rd_mon.mon_rd.connect(scrb.rd_imp);
 
         rd_agn.rd_mon.mon_rd.connect(rd_cov.analysis_export);
+
+        virt_seqr.wr_seqr = wr_agn.wr_seqr;
+
+        virt_seqr.rd_seqr = rd_agn.rd_seqr;
       
     endfunction
   

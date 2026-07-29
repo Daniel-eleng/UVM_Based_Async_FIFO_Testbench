@@ -37,18 +37,19 @@ class FIFO_wr_monitor extends uvm_monitor;
 
             if (inf.mon_cb_wr.wr_en && !inf.mon_cb_wr.full) begin
 
-                wr_itm = FIFO_wr_item :: type_id :: create("wr_itm",this);
+                    wr_itm = FIFO_wr_item :: type_id :: create("wr_itm",this);
 
-                wr_itm.data_in = inf.mon_cb_wr.data_in;
-                wr_itm.full = inf.mon_cb_wr.full;
-                wr_itm.wr_en = inf.mon_cb_wr.wr_en;
+                    wr_itm.data_in = inf.mon_cb_wr.data_in;
+                    wr_itm.full = inf.mon_cb_wr.full;
+                    wr_itm.wr_en = inf.mon_cb_wr.wr_en;
 
-                `uvm_info(get_type_name(),$sformatf("data_in = %0d | full = %0d | wr_en = %0d",wr_itm.data_in,wr_itm.full,wr_itm.wr_en),UVM_HIGH)
+                    `uvm_info(get_type_name(),$sformatf("data_in = %0d | full = %0d | wr_en = %0d",wr_itm.data_in,wr_itm.full,wr_itm.wr_en),UVM_HIGH)
 
-                mon_wr.write(wr_itm);
+                    mon_wr.write(wr_itm);
+
+                end
 
             end
-        end
       
     endtask
   

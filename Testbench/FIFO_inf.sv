@@ -1,11 +1,11 @@
 interface FIFO_inf #(parameter DATA_WIDTH = 16, parameter DEPTH = 16) 
                     (input logic wr_clk, input logic rd_clk);
 
-    logic [DATA_WIDTH-1:0] data_in;
-    logic wr_rst_n;
-    logic rd_rst_n;
-    logic wr_en;
-    logic rd_en;
+    logic [DATA_WIDTH-1:0] data_in = '0;
+    logic wr_rst_n = 1'b0;
+    logic rd_rst_n = 1'b0;
+    logic wr_en = 1'b0;
+    logic rd_en = 1'b0;
     logic full;
     logic empty;
     logic [DATA_WIDTH-1:0] data_out;

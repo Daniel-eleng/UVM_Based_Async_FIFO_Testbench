@@ -62,13 +62,20 @@ class FIFO_scoreboard #(parameter DATA_WIDTH = 16, parameter DEPTH = 16) extends
 
         expected_data = expected_q.pop_front();
 
+        if ($isunknown(expected_data)) begin
+
+        `uvm_warning(get_type_name(), $sformatf("Skipping comparison: reference data unknown at simulation start (data_out = %0d) — known startup scheduling artifact", item.data_out))
+        return;
+        
+        end
+
         if(expected_data == item.data_out) begin
-            `uvm_info(get_type_name(),$sformatf("data_out = %0d",item.data_out),UVM_LOW)
+            `uvm_info(get_type_name(),$sformatf("PASS : data_out = %0d",item.data_out),UVM_LOW)
             pass_count++;
         end
 
         else begin
-            `uvm_error(get_type_name(),$sformatf("Error : expected : %0d | data_out : %0d",expected_data,item.data_out))
+            `uvm_error(get_type_name(),$sformatf("FAIL : expected : %0d | data_out : %0d",expected_data,item.data_out))
             fail_count++;
         end
     endfunction

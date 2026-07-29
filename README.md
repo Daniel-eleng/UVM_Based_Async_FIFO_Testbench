@@ -4,6 +4,8 @@ This project implements a UVM-based verification environment for a 16-bit-wide, 
 
 ## Design Under Test (DUT)
 
+The interface (signals, clock domains, reset strategy, sizing) was specified by me; the RTL implementing that interface was AI-generated, so this project could focus on the verification methodology rather than RTL design. All UVM testbench components, debugging, and analysis below are original work.
+
 An asynchronous FIFO with:
 
 - Independent write (`wr_clk`) and read (`rd_clk`) clock domains, with separate, per-domain active-low resets
@@ -60,7 +62,7 @@ Early on, after fixing all compile-time issues, the simulation ran to completion
 
 After rebalancing the clocks (bug 1 above) to bring the two rates closer together, the scoreboard started reporting a new class of failure:
 
-```
+```text
 WRITE observed while queue already at DEPTH (16)! data_in = 65535 — possible full-flag bug
 FAIL : expected : 0 | data_out : 65535
 ```

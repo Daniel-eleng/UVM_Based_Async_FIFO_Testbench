@@ -6,9 +6,9 @@ module FIFO_top;
     bit wr_clk;
     bit rd_clk;
 
-    always #5 wr_clk = ~wr_clk;
+    always #6 wr_clk = ~wr_clk;
 
-    always #10 rd_clk = ~rd_clk;
+    always #5 rd_clk = ~rd_clk;
 
     FIFO_inf inf(wr_clk,rd_clk);
 

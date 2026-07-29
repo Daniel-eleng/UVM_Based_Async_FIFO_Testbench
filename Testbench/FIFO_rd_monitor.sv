@@ -37,18 +37,21 @@ class FIFO_rd_monitor extends uvm_monitor;
             @(inf.mon_cb_rd);
 
             if (pending_valid) begin
+   
+                rd_itm = FIFO_rd_item :: type_id :: create("rd_itm",this);
 
-               
-                    rd_itm = FIFO_rd_item :: type_id :: create("rd_itm",this);
+                rd_itm.rd_en = inf.mon_cb_rd.rd_en;
+                rd_itm.data_out = inf.mon_cb_rd.data_out;
+                rd_itm.is_empty = inf.mon_cb_rd.empty;
 
-                    rd_itm.rd_en = inf.mon_cb_rd.rd_en;
-                    rd_itm.data_out = inf.mon_cb_rd.data_out;
-                    rd_itm.is_empty = inf.mon_cb_rd.empty;
+                `uvm_info(get_type_name(),$sformatf("rd_en = %0d | data_out = %0d | is_empty = %0d",rd_itm.rd_en,rd_itm.data_out,rd_itm.is_empty),UVM_HIGH)
 
-                    `uvm_info(get_type_name(),$sformatf("rd_en = %0d | data_out = %0d | is_empty = %0d",rd_itm.rd_en,rd_itm.data_out,rd_itm.is_empty),UVM_HIGH)
+                mon_rd.write(rd_itm);
 
-                    mon_rd.write(rd_itm);
+            end
 
+            if (inf.mon_cb_rd.rd_en && inf.mon_cb_rd.empty) begin
+                `uvm_info(get_type_name(), "OBSERVED: read attempted while EMPTY (correctly ignored by DUT)", UVM_LOW);
             end
 
             pending_valid = inf.mon_cb_rd.rd_en && !inf.mon_cb_rd.empty;

@@ -35,7 +35,11 @@ class FIFO_wr_monitor extends uvm_monitor;
 
             @(inf.mon_cb_wr);
 
-            if (inf.mon_cb_wr.wr_en && !inf.mon_cb_wr.full) begin
+            if (inf.mon_cb_wr.wr_en && inf.mon_cb_wr.full) begin
+                `uvm_info(get_type_name(), "OBSERVED: write attempted while FULL (correctly ignored by DUT)", UVM_LOW)
+            end
+
+            else if (inf.mon_cb_wr.wr_en && !inf.mon_cb_wr.full) begin
 
                     wr_itm = FIFO_wr_item :: type_id :: create("wr_itm",this);
 

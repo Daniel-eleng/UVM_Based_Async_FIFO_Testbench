@@ -4,35 +4,27 @@ class FIFO_rd_coverage #(parameter DATA_WIDTH = 16) extends uvm_subscriber#(FIFO
     typedef FIFO_rd_coverage #(DATA_WIDTH) this_cov;
     `uvm_component_param_utils(this_cov)
 
-    FIFO_rd_item rd_itm;
+    bit seen_read_notempty;
+    bit seen_read_empty;
 
     function new(string name = "FIFO_rd_coverage", uvm_component parent);
  
         super.new(name,parent);
-
-        FIFO_rd_cg = new();
  
     endfunction
 
-    covergroup FIFO_rd_cg;
+    function void write(FIFO_rd_item item);
 
-        rd_en_cp : coverpoint rd_itm.rd_en;
-        empty_cp : coverpoint rd_itm.is_empty;
-        FIFO_cross : cross rd_en_cp , empty_cp;
+        if (item.rd_en && !item.is_empty && !seen_read_notempty) begin
+            seen_read_notempty = 1;
+            `uvm_info(get_type_name(), "First occurrence: read while NOT empty", UVM_LOW)
+        end
 
-    endgroup
+        if (item.rd_en && item.is_empty && !seen_read_empty) begin
+            seen_read_empty = 1;
+            `uvm_info(get_type_name(), "First occurrence: read attempted while EMPTY", UVM_LOW)
+        end
 
-    function void write(FIFO_rd_item t);
-
-        rd_itm = t;
-        FIFO_rd_cg.sample();
-      
-    endfunction
-
-    function void report_phase(uvm_phase phase);
-
-        `uvm_info(get_type_name(),$sformatf("Total coverage:%0.2f",FIFO_rd_cg.get_coverage()),UVM_LOW)
-      
     endfunction
   
 endclass

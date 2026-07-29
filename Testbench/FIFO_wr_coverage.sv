@@ -1,43 +1,29 @@
 
-class FIFO_wr_coverage #(parameter DATA_WIDTH = 16) extends uvm_subscriber#(FIFO_wr_item);
+class FIFO_wr_coverage extends uvm_subscriber#(FIFO_wr_item);
 
-    typedef FIFO_wr_coverage #(DATA_WIDTH) this_cov;
-    `uvm_component_param_utils(this_cov)
+    `uvm_component_param_utils(FIFO_wr_coverage)
 
-    FIFO_wr_item wr_itm;
+    bit seen_write_notfull;
+    bit seen_write_full;
 
     function new(string name = "FIFO_wr_coverage", uvm_component parent);
  
         super.new(name,parent);
-
-        FIFO_wr_cg = new();
  
     endfunction
 
-    covergroup FIFO_wr_cg;
+    function void write(FIFO_wr_item wr_itm);
 
-        data_in_cp : coverpoint wr_itm.data_in{
-            bins zero = {0};
-            bins max = {(1<<DATA_WIDTH) - 1};
-        }
+        if (wr_itm.wr_en && !wr_itm.full && !seen_write_notfull) begin
+            seen_write_notfull = 1;
+            `uvm_info(get_type_name(), "First occurrence: write while NOT full", UVM_LOW)
+        end
 
-        wr_en_cp : coverpoint wr_itm.wr_en;
-        full_cp : coverpoint wr_itm.full;
+        if (wr_itm.wr_en && wr_itm.full && !seen_write_full) begin
+            seen_write_full = 1;
+            `uvm_info(get_type_name(), "First occurrence: write attempted while FULL", UVM_LOW)
+        end
 
-        FIFO_cross : cross wr_en_cp , full_cp;
-    endgroup
-
-    function void write(FIFO_wr_item t);
-
-        wr_itm = t;
-        FIFO_wr_cg.sample();
-      
-    endfunction
-
-    function void report_phase(uvm_phase phase);
-
-        `uvm_info(get_type_name(),$sformatf("Total coverage:%0.2f",FIFO_wr_cg.get_coverage()),UVM_LOW)
-      
     endfunction
   
 endclass

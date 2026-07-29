@@ -16,7 +16,7 @@ module FIFO_read_ctrl #(parameter ADDR_WIDTH = 4)(
 
     assign rd_en_gated = rd_en & ~empty;
 
-    gray_counter #(.ADDR_WIDTH(ADDR_WIDTH)) u_rd_gray_cnt (
+    FIFO_gray_counter #(.ADDR_WIDTH(ADDR_WIDTH)) u_rd_gray_cnt (
         .clk        (rd_clk),
         .rst_n      (rd_rst_n),
         .en         (rd_en_gated),

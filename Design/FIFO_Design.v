@@ -19,7 +19,7 @@ module FIFO_Design #(parameter DATA_WIDTH = 16, parameter DEPTH = 16)(
     wire [ADDR_WIDTH-1:0] wr_addr, rd_addr;
     wire                  wr_en_gated;
 
-    fifo_write_ctrl #(.ADDR_WIDTH(ADDR_WIDTH)) u_wr_ctrl (
+    FIFO_write_ctrl #(.ADDR_WIDTH(ADDR_WIDTH)) u_wr_ctrl (
         .wr_clk       (w_clk),
         .wr_rst_n     (w_rst_n),
         .wr_en        (wr_en),
@@ -30,7 +30,7 @@ module FIFO_Design #(parameter DATA_WIDTH = 16, parameter DEPTH = 16)(
         .wr_en_gated  (wr_en_gated)
     );
 
-    fifo_read_ctrl #(.ADDR_WIDTH(ADDR_WIDTH)) u_rd_ctrl (
+    FIFO_read_ctrl #(.ADDR_WIDTH(ADDR_WIDTH)) u_rd_ctrl (
         .rd_clk       (rd_clk),
         .rd_rst_n     (rd_rst_n),
         .rd_en        (rd_en),
@@ -40,21 +40,21 @@ module FIFO_Design #(parameter DATA_WIDTH = 16, parameter DEPTH = 16)(
         .rd_gray      (rd_gray)
     );
 
-    sync_ff #(.WIDTH(ADDR_WIDTH+1)) u_sync_wr2rd (
+    FIFO_sync_ff #(.WIDTH(ADDR_WIDTH+1)) u_sync_wr2rd (
         .clk      (rd_clk),
         .rst_n    (rd_rst_n),
         .async_in (wr_gray),
         .sync_out (wr_gray_sync_to_rd)
     );
 
-    sync_ff #(.WIDTH(ADDR_WIDTH+1)) u_sync_rd2wr (
+    FIFO_sync_ff #(.WIDTH(ADDR_WIDTH+1)) u_sync_rd2wr (
         .clk      (w_clk),
         .rst_n    (w_rst_n),
         .async_in (rd_gray),
         .sync_out (rd_gray_sync_to_wr)
     );
 
-    fifo_mem #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH)) u_mem (
+    FIFO_mem #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH)) u_mem (
         .wr_clk      (w_clk),
         .wr_en_gated (wr_en_gated),
         .wr_addr     (wr_addr),

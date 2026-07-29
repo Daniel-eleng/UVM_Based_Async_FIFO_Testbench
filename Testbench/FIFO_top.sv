@@ -1,4 +1,4 @@
-`include "uvm_macros.svh"
+import FIFO_pkg::*;
 import uvm_pkg::*;
 
 module FIFO_top;

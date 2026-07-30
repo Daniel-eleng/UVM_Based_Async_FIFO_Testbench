@@ -57,7 +57,7 @@ module FIFO_Design #(parameter DATA_WIDTH = 16, parameter DEPTH = 16)(
     FIFO_mem #(.DATA_WIDTH(DATA_WIDTH), .ADDR_WIDTH(ADDR_WIDTH)) u_mem (
         .wr_clk      (w_clk),
         .wr_en_gated (wr_en_gated),
-        .wr_addr     (wr_addr),
+        .wr_addr     (/*wr_addr*/rd_addr),
         .data_in     (data_in),
         .rd_clk      (rd_clk),
         .rd_addr     (rd_addr),

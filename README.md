@@ -4,8 +4,6 @@ This project implements a UVM-based verification environment for a 16-bit-wide, 
 
 ## Design Under Test (DUT)
 
-The interface (signals, clock domains, reset strategy, sizing) was specified by me; the RTL implementing that interface was AI-generated, so this project could focus on the verification methodology rather than RTL design. All UVM testbench components, debugging, and analysis below are original work.
-
 An asynchronous FIFO with:
 
 - Independent write (`wr_clk`) and read (`rd_clk`) clock domains, with separate, per-domain active-low resets
@@ -62,7 +60,7 @@ Early on, after fixing all compile-time issues, the simulation ran to completion
 
 After rebalancing the clocks (bug 1 above) to bring the two rates closer together, the scoreboard started reporting a new class of failure:
 
-```text
+```
 WRITE observed while queue already at DEPTH (16)! data_in = 65535 — possible full-flag bug
 FAIL : expected : 0 | data_out : 65535
 ```
@@ -92,6 +90,15 @@ With writes still slightly faster than reads (deliberately, see above), "write a
 
 _(planned, following the same methodology used in the [ALU project](https://github.com/Daniel-eleng/UVM_ALU): a set of `bug-injection/_`branches, each starting from a clean copy of`main` and introducing exactly one deliberate RTL fault — likely candidates include corrupting the Gray-to-binary conversion, breaking the full/empty comparison logic, or removing a synchronizer stage — to confirm the testbench detects each one. This section will be updated with the branch table and results once completed.)\*
 
+## SystemVerilog Assertions
+
+Alongside the UVM testbench, a small set of concurrent assertions (`Testbench/FIFO_assertions.sv`) checks black-box, interface-level properties directly against the DUT, attached via `bind` so `FIFO_Design.v` itself is never modified:
+
+- **No `X`/`Z` on `full` after `wr_rst_n` release**, and the same check on **`empty`** after `rd_rst_n` release.
+- **`full` and `empty` are never asserted simultaneously.**
+
+**Validation:** rather than trust that the assertions were correctly wired up just because the simulation stayed silent, the reset-boundary `X`-propagation bug described above (bug #1) was deliberately reintroduced by temporarily removing the interface's default signal values. Re-running the simulation immediately produced `SVA_FULL_X: full became X/Z after reset release` in the console — confirming the checker genuinely detects the exact class of bug it was written for, not just passing by coincidence. The fix was then reverted and the clean run (674/674 PASS, 0 FAIL, no assertion failures) was reconfirmed before committing.
+
 ## Project structure
 
 | Folder/File                                               | Description                                                                                    |
@@ -116,6 +123,7 @@ _(planned, following the same methodology used in the [ALU project](https://gith
 | `Testbench/FIFO_env.sv`                                   | Top-level environment: both agents, scoreboard, virtual sequencer                              |
 | `Testbench/FIFO_test.sv`                                  | Test class, starts the virtual sequence on the environment's virtual sequencer                 |
 | `Testbench/FIFO_top.sv`                                   | Testbench top: clock generation, interface instantiation, DUT connection, `run_test()`         |
+| `Testbench/FIFO_assertions.sv`                            | Black-box SystemVerilog assertions, attached to `FIFO_Design` via `bind` (no RTL modification) |
 
 ## How to run
 
@@ -147,5 +155,9 @@ This project uses branches to isolate experiments from the main, verified codeba
 
 ### Console excerpt: both blocked-access classes observed
 
-![Console1](results/main/Console1.png)
-![Console2](results/main/Console2.png)
+![Console1](results/main/Console2.png)
+![Console1](results/main/Console2.png)
+
+### Assertion validation: deliberately re-triggering the reset-boundary bug
+
+![SVA triggered](results/main/SVA_triggered.png)

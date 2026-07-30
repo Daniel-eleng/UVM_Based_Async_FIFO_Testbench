@@ -155,7 +155,7 @@ This project uses branches to isolate experiments from the main, verified codeba
 
 ### Console excerpt: both blocked-access classes observed
 
-![Console1](results/main/Console2.png)
+![Console1](results/main/Console1.png)
 ![Console1](results/main/Console2.png)
 
 ### Assertion validation: deliberately re-triggering the reset-boundary bug

@@ -28,7 +28,7 @@ module FIFO_write_ctrl #(parameter ADDR_WIDTH = 4)(
     assign wr_bin_next  = wr_bin + wr_en_gated;
     assign wr_gray_next = (wr_bin_next >> 1) ^ wr_bin_next;
 
-    assign full_next = (wr_gray_next == {~rd_gray_sync[ADDR_WIDTH:ADDR_WIDTH-1],
+    assign full_next = (/* wr_gray_next == */0 == {~rd_gray_sync[ADDR_WIDTH:ADDR_WIDTH-1],
                                            rd_gray_sync[ADDR_WIDTH-2:0]});
 
     always @(posedge wr_clk or negedge wr_rst_n) begin

@@ -11,7 +11,7 @@ module FIFO_gray_counter #(parameter ADDR_WIDTH = 4)(
     wire [ADDR_WIDTH:0] gray_next;
 
     assign bin_next  = bin_count + en;
-    assign gray_next = (bin_next >> 1) ^ bin_next;
+    assign gray_next = (bin_next >> 1) /*^*/ | bin_next;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin

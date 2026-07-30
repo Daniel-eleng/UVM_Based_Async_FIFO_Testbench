@@ -41,3 +41,5 @@ module FIFO_assertions (
     endproperty
 
 endmodule
+
+bind FIFO_Design FIFO_assertions u_assertions (.*);

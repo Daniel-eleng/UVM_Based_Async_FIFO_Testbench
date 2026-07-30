@@ -88,7 +88,13 @@ With writes still slightly faster than reads (deliberately, see above), "write a
 
 ## Testbench validation via mutation testing (bug injection)
 
-_(planned, following the same methodology used in the [ALU project](https://github.com/Daniel-eleng/UVM_ALU): a set of `bug-injection/_`branches, each starting from a clean copy of`main` and introducing exactly one deliberate RTL fault — likely candidates include corrupting the Gray-to-binary conversion, breaking the full/empty comparison logic, or removing a synchronizer stage — to confirm the testbench detects each one. This section will be updated with the branch table and results once completed.)\*
+Following the same methodology used in the [ALU project](https://github.com/Daniel-eleng/UVM_ALU), each deliberate RTL fault lives on its own `bug-injection/*` branch, starting from a clean copy of `main`, and is never merged back — the branch exists only as proof that the testbench detects the fault, not as part of the shipped design.
+
+| Branch                                 | Injected fault                                                                                                                                                        | Result                                                                                                                                                                                                                                                                                                                        |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bug-injection/full-comparison-broken` | In `FIFO_write_ctrl`, `full_next`'s comparison against `wr_gray_next` was replaced with a hardcoded `0`, disconnecting `full` from the actual write pointer entirely. | **76 / 985 PASS, 909 FAIL.** With `full` no longer tracking real occupancy, writes were accepted far past `DEPTH`, silently overwriting not-yet-read entries — the scoreboard's `expected_q.size() >= DEPTH` guard fired 306 times, and the resulting data corruption cascaded into most subsequent read comparisons failing. |
+
+**A useful negative result — the SVA layer did _not_ catch this one.** Neither `SVA_FULL_X`/`SVA_EMPTY_X` nor `SVA_FULL_EMPTY` fired during this run, because the injected fault never produces an `X` and never causes `full`/`empty` to be simultaneously asserted — it produces a `full` that is simply _wrong_, but still a well-formed `0` or `1`. This is an honest limitation of the current black-box assertion set: structural sanity checks (no unknowns, no impossible states) don't substitute for a behavioral property like "`full` must assert after `DEPTH` writes with no intervening read." The scoreboard's queue-based model caught this fault decisively; a future assertion written against that specific behavior would close this gap.
 
 ## SystemVerilog Assertions
 
@@ -155,8 +161,8 @@ This project uses branches to isolate experiments from the main, verified codeba
 
 ### Console excerpt: both blocked-access classes observed
 
-![Console1](results/main/Console2.png)
-![Console1](results/main/Console2.png)
+![Console1](results/main/Console1.png)
+![Console2](results/main/Console2.png)
 
 ### Assertion validation: deliberately re-triggering the reset-boundary bug
 
